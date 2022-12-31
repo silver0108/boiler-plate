@@ -20,6 +20,7 @@ mongoose.connect(config.mongoURI)
 
 app.get('/', (req, res) => res.send("Hello World!"))
 
+// Register router
 app.post('/register', (req, res) => {
   // 회원가입 시 필요한 정보들을 client에서 가져와서
   // 데이터베이스에 넣음.
