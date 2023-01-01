@@ -5,11 +5,11 @@ const app = express()
 const port = 5000
 
 const {User} = require('./models/User');
-const bodyParser = require('body-parser'); // client에서 보내는 정보를 서버에서 분석해서 가져올 수 있도록 함.
+const {auth} = require('./middleware/auth');
 
+const bodyParser = require('body-parser'); // client에서 보내는 정보를 서버에서 분석해서 가져올 수 있도록 함.
 const cookieParser = require('cookie-parser');
 
-const {auth} = require('./middleware/auth');
 
 // application/x-www-form-urlencoded 타입을 분석해서 가져올 수 있게 함.
 app.use(bodyParser.urlencoded({extended: true}));
@@ -27,7 +27,7 @@ mongoose.connect(config.mongoURI)
 app.get('/', (req, res) => res.send("Hello World!"))
 
 
-// Register router
+// Register route
 app.post('/api/users/register', (req, res) => {
 
   // 회원가입 시 필요한 정보들을 client에서 가져와서
@@ -43,7 +43,7 @@ app.post('/api/users/register', (req, res) => {
 })
 
 
-// Login router
+// Login route
 app.post('/api/users/login', (req, res) => {
 
   // 요청된 email을 데이터베이스에서 찾음.
@@ -76,7 +76,7 @@ app.post('/api/users/login', (req, res) => {
 })
 
 
-// Auth router
+// Auth route
 app.get('/api/users/auth', auth, (req, res) => {
 
   // next로 middleware 통과 == Authenticatoin "true"
@@ -92,5 +92,17 @@ app.get('/api/users/auth', auth, (req, res) => {
   })
 })
 
+
+// Logout route
+app.get('/api/users/logout', auth, (req, res) => {
+  User.findOneAndUpdate({_id: req.user._id}, 
+    {token: ""}, // 데이터베이스에 있는 token 지워줌 => 로그인 풀림
+    (err, user) => {
+      if(err) return res.json({success: false, err});
+      return res.status(200).send({
+        success: true
+      })
+    })
+})
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
