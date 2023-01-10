@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { registerUser } from '../../../_actions/user_action'
+import Auth from '../../../hoc/auth'
 
 function RegisterPage() {
 
@@ -66,13 +67,11 @@ function RegisterPage() {
         <input type="password" value={ConfirmPassword} onChange={onConfirmPasswordHandler}/>
         <br/>
         
-        <button>
-          회원가입
-          </button>
+        <button>회원가입</button>
       </form>
 
     </div>
   )
 }
 
-export default RegisterPage
+export default Auth(RegisterPage, false)
