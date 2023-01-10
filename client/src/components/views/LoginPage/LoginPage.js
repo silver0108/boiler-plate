@@ -27,7 +27,7 @@ function LoginPage() {
 
     dispatch(loginUser(body))
       .then(response => {
-        if(response.payload.loginSuccess){
+        if(response.payload.loginSuccess){ // 로그인은 서버에서 loginSuccess로 응답줌
           navigate("/") // 시작 페이지로 이동
         } else{
           alert('Error')
